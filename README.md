@@ -121,3 +121,6 @@ Enter the course name, course code, or instructor name in the search box.
 ## Conclusion
 
 The Course Management System is a simple and useful web application for managing course information. It demonstrates the use of HTML, CSS, and JavaScript to create an interactive dashboard. The project can be enhanced in the future by adding a backend database and user authentication.
+
+
+output link:https://tharshnapalanisamy.github.io/course-management-system/
