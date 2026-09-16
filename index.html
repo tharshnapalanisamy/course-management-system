@@ -1,0 +1,542 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Management System</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+        }
+
+        header {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 25px auto;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            text-align: center;
+            flex: 1;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .card h3 {
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        /* Form */
+        .form-box, .list-box {
+            background: white;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: grid;
+            gap: 10px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 11px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #555;
+        }
+
+        .cancel {
+            background: #777;
+        }
+
+        /* Search */
+        #searchInput {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background: #333;
+            color: white;
+        }
+
+        .edit-btn {
+            background: #777;
+            padding: 7px 12px;
+        }
+
+        .delete-btn {
+            background: #333;
+            padding: 7px 12px;
+        }
+
+        #emptyMessage {
+            text-align: center;
+            padding: 15px;
+            color: #777;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        @media (max-width: 700px) {
+            .dashboard {
+                flex-direction: column;
+            }
+
+            .container {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Course Management System</h1>
+    <p>Manage Courses Easily</p>
+</header>
+
+<div class="container">
+
+    <!-- 3 Dashboards -->
+    <div class="dashboard">
+
+        <div class="card">
+            <h3>Total Courses</h3>
+            <p id="totalCourses">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Active Courses</h3>
+            <p id="activeCourses">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Inactive Courses</h3>
+            <p id="inactiveCourses">0</p>
+        </div>
+
+    </div>
+
+    <!-- Add Course Form -->
+    <div class="form-box">
+
+        <h2 id="formTitle">Add Course</h2>
+
+        <form id="courseForm">
+
+            <input type="hidden" id="courseId">
+
+            <label>Course Name</label>
+            <input type="text" id="courseName"
+                   placeholder="Enter course name" required>
+
+            <label>Course Code</label>
+            <input type="text" id="courseCode"
+                   placeholder="Enter course code" required>
+
+            <label>Instructor Name</label>
+            <input type="text" id="instructor"
+                   placeholder="Enter instructor name" required>
+
+            <label>Duration</label>
+            <input type="text" id="duration"
+                   placeholder="Example: 3 Months" required>
+
+            <label>Credits</label>
+            <input type="number" id="credits"
+                   placeholder="Enter credits"
+                   min="1" max="10" required>
+
+            <label>Status</label>
+            <select id="status" required>
+                <option value="">Select Status</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+            </select>
+
+            <button type="submit" id="submitBtn">
+                Add Course
+            </button>
+
+            <button type="button" id="cancelBtn"
+                    class="cancel" hidden>
+                Cancel
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- Course List -->
+    <div class="list-box">
+
+        <h2>Course List</h2>
+
+        <input type="text" id="searchInput"
+               placeholder="Search Course">
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>Course Name</th>
+                        <th>Code</th>
+                        <th>Instructor</th>
+                        <th>Duration</th>
+                        <th>Credits</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="courseTableBody"></tbody>
+
+            </table>
+
+        </div>
+
+        <p id="emptyMessage">
+            No courses available.
+        </p>
+
+    </div>
+
+</div>
+
+<footer>
+    <p>© 2026 Course Management System</p>
+</footer>
+
+<script>
+"use strict";
+
+// Get elements
+const courseForm = document.getElementById("courseForm");
+const courseId = document.getElementById("courseId");
+
+const courseName = document.getElementById("courseName");
+const courseCode = document.getElementById("courseCode");
+const instructor = document.getElementById("instructor");
+const duration = document.getElementById("duration");
+const credits = document.getElementById("credits");
+const status = document.getElementById("status");
+
+const submitBtn = document.getElementById("submitBtn");
+const cancelBtn = document.getElementById("cancelBtn");
+const formTitle = document.getElementById("formTitle");
+
+const courseTableBody = document.getElementById("courseTableBody");
+const searchInput = document.getElementById("searchInput");
+const emptyMessage = document.getElementById("emptyMessage");
+
+// Load courses
+let courses = JSON.parse(
+    localStorage.getItem("courses") || "[]"
+);
+
+// Save courses
+function saveCourses() {
+    localStorage.setItem("courses", JSON.stringify(courses));
+}
+
+// Display courses
+function displayCourses() {
+
+    courseTableBody.innerHTML = "";
+
+    const search = searchInput.value.toLowerCase();
+
+    const filteredCourses = courses.filter(course =>
+        course.name.toLowerCase().includes(search) ||
+        course.code.toLowerCase().includes(search)
+    );
+
+    emptyMessage.style.display =
+        filteredCourses.length === 0 ? "block" : "none";
+
+    filteredCourses.forEach((course, index) => {
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${course.name}</td>
+            <td>${course.code}</td>
+            <td>${course.instructor}</td>
+            <td>${course.duration}</td>
+            <td>${course.credits}</td>
+            <td>${course.status}</td>
+            <td>
+                <button class="edit-btn"
+                    onclick="editCourse('${course.id}')">
+                    Edit
+                </button>
+
+                <button class="delete-btn"
+                    onclick="deleteCourse('${course.id}')">
+                    Delete
+                </button>
+            </td>
+        `;
+
+        courseTableBody.appendChild(row);
+
+    });
+
+    updateDashboard();
+}
+
+// Update dashboard
+function updateDashboard() {
+
+    document.getElementById("totalCourses").textContent =
+        courses.length;
+
+    document.getElementById("activeCourses").textContent =
+        courses.filter(course =>
+            course.status === "Active"
+        ).length;
+
+    document.getElementById("inactiveCourses").textContent =
+        courses.filter(course =>
+            course.status === "Inactive"
+        ).length;
+
+}
+
+// Add or Update Course
+courseForm.addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+    const name = courseName.value.trim();
+    const code = courseCode.value.trim().toUpperCase();
+    const instructorName = instructor.value.trim();
+    const durationValue = duration.value.trim();
+    const creditsValue = Number(credits.value);
+    const statusValue = status.value;
+
+    if (
+        !name ||
+        !code ||
+        !instructorName ||
+        !durationValue ||
+        !statusValue
+    ) {
+        alert("Please fill all fields.");
+        return;
+    }
+
+    if (creditsValue < 1 || creditsValue > 10) {
+        alert("Credits must be between 1 and 10.");
+        return;
+    }
+
+    // Duplicate course code
+    const duplicate = courses.some(course =>
+        course.code === code &&
+        course.id !== courseId.value
+    );
+
+    if (duplicate) {
+        alert("Course code already exists.");
+        return;
+    }
+
+    if (courseId.value) {
+
+        // Update course
+        const course = courses.find(
+            course => course.id === courseId.value
+        );
+
+        if (!course) return;
+
+        course.name = name;
+        course.code = code;
+        course.instructor = instructorName;
+        course.duration = durationValue;
+        course.credits = creditsValue;
+        course.status = statusValue;
+
+        alert("Course updated successfully.");
+
+    } else {
+
+        // Create course
+        courses.push({
+
+            id: Date.now().toString(),
+
+            name: name,
+            code: code,
+            instructor: instructorName,
+            duration: durationValue,
+            credits: creditsValue,
+            status: statusValue
+
+        });
+
+        alert("Course added successfully.");
+
+    }
+
+    saveCourses();
+    displayCourses();
+    resetForm();
+
+});
+
+// Edit course
+function editCourse(id) {
+
+    const course = courses.find(
+        course => course.id === id
+    );
+
+    if (!course) return;
+
+    courseId.value = course.id;
+    courseName.value = course.name;
+    courseCode.value = course.code;
+    instructor.value = course.instructor;
+    duration.value = course.duration;
+    credits.value = course.credits;
+    status.value = course.status;
+
+    formTitle.textContent = "Edit Course";
+    submitBtn.textContent = "Update Course";
+    cancelBtn.hidden = false;
+
+    window.scrollTo(0, 0);
+
+}
+
+// Delete course
+function deleteCourse(id) {
+
+    const course = courses.find(
+        course => course.id === id
+    );
+
+    if (!course) return;
+
+    if (confirm("Are you sure you want to delete this course?")) {
+
+        courses = courses.filter(
+            course => course.id !== id
+        );
+
+        saveCourses();
+        displayCourses();
+
+        alert("Course deleted successfully.");
+
+    }
+
+}
+
+// Reset form
+function resetForm() {
+
+    courseForm.reset();
+
+    courseId.value = "";
+
+    formTitle.textContent = "Add Course";
+    submitBtn.textContent = "Add Course";
+    cancelBtn.hidden = true;
+
+}
+
+// Cancel edit
+cancelBtn.addEventListener("click", resetForm);
+
+// Search
+searchInput.addEventListener("input", displayCourses);
+
+// Initial display
+displayCourses();
+
+</script>
+
+</body>
+</html>
