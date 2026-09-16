@@ -1,0 +1,30 @@
+CREATE DATABASE course_management;
+
+USE course_management;
+
+CREATE TABLE courses (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    course_name VARCHAR(100) NOT NULL,
+    course_code VARCHAR(50) UNIQUE NOT NULL,
+    instructor VARCHAR(100) NOT NULL,
+    duration VARCHAR(50) NOT NULL,
+    credits INT NOT NULL,
+    status VARCHAR(20) NOT NULL
+);
+
+INSERT INTO courses
+(course_name, course_code, instructor, duration, credits, status)
+VALUES
+('Web Development', 'WD101', 'Sangeetha', '6 Months', 4, 'Active');
+
+INSERT INTO courses
+(course_name, course_code, instructor, duration, credits, status)
+VALUES
+('Database Management', 'DB102', 'Priya', '4 Months', 3, 'Active');
+
+INSERT INTO courses
+(course_name, course_code, instructor, duration, credits, status)
+VALUES
+('Computer Networks', 'CN103', 'Kumar', '5 Months', 4, 'Inactive');
+
+SELECT * FROM courses;
